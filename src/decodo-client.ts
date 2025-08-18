@@ -44,7 +44,8 @@ export class DecodoClient {
       },
       (error: AxiosError) => {
         const status = error.response?.status;
-        const message = error.response?.data || error.message;
+        const data = error.response?.data;
+        const message = typeof data === 'object' && data !== null ? JSON.stringify(data) : String(data) || error.message;
         logger.error(`API Error: ${status} ${error.config?.url} - ${message}`);
         return Promise.reject(this.formatError(error));
       }
@@ -53,7 +54,16 @@ export class DecodoClient {
 
   private formatError(error: AxiosError): Error {
     const status = error.response?.status;
-    const message = error.response?.data || error.message;
+    const data = error.response?.data;
+    
+    // Properly serialize error data
+    let message: string;
+    if (typeof data === 'object' && data !== null) {
+      message = JSON.stringify(data, null, 2);
+    } else {
+      message = String(data) || error.message;
+    }
+    
     return new Error(`Decodo API Error (${status}): ${message}`);
   }
 
@@ -64,7 +74,8 @@ export class DecodoClient {
   }
 
   async getSubUsers(): Promise<ApiResponse> {
-    const response = await this.client.get('/sub-users');
+    // Use the documented v2 API pattern: /v2/sub-users
+    const response = await this.client.get('/v2/sub-users');
     return response.data;
   }
 
@@ -90,23 +101,27 @@ export class DecodoClient {
 
   // Proxy Endpoint Management
   async getEndpoints(): Promise<ApiResponse> {
-    const response = await this.client.get('/endpoints');
+    // Use the documented v2 API pattern: /v2/endpoints
+    const response = await this.client.get('/v2/endpoints');
     return response.data;
   }
 
   async generateEndpoint(config?: EndpointGeneration): Promise<ApiResponse> {
-    const response = await this.client.post('/endpoints/generate', config || {});
+    // Use the documented v2 API pattern: /v2/endpoints-custom
+    const response = await this.client.get('/v2/endpoints-custom', { params: config || {} });
     return response.data;
   }
 
   async getTargetInfo(target: TargetInfo): Promise<ApiResponse> {
-    const response = await this.client.post('/targets', target);
+    // Use the correct API pattern: /api/v2/targets
+    const response = await this.client.post('/api/v2/targets', target);
     return response.data;
   }
 
   // IP Whitelist Management
   async getWhitelist(): Promise<ApiResponse> {
-    const response = await this.client.get('/whitelisted-ips');
+    // Use the documented v2 API pattern: /v2/whitelisted-ips
+    const response = await this.client.get('/v2/whitelisted-ips');
     return response.data;
   }
 
@@ -122,12 +137,14 @@ export class DecodoClient {
 
   // Analytics and Traffic
   async getTraffic(query?: TrafficQuery): Promise<ApiResponse> {
-    const response = await this.client.get('/traffic', { params: query });
+    // Use the correct API pattern: /api/v2/statistics/traffic
+    const response = await this.client.post('/api/v2/statistics/traffic', query || {});
     return response.data;
   }
 
   async getSubscriptions(): Promise<ApiResponse> {
-    const response = await this.client.get('/subscriptions');
+    // Use the documented v2 API pattern: /v2/subscriptions
+    const response = await this.client.get('/v2/subscriptions');
     return response.data;
   }
 }

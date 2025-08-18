@@ -113,6 +113,8 @@ export class DecodoTools {
         inputSchema: {
           type: 'object',
           properties: {
+            username: { type: 'string', description: 'Username for the proxy endpoint' },
+            password: { type: 'string', description: 'Password for the proxy endpoint' },
             protocol: { type: 'string', enum: ['http', 'https'], description: 'Protocol (optional)' },
             format: { type: 'string', enum: ['json', 'xml'], description: 'Response format (optional)' },
             custom_params: { type: 'object', description: 'Custom parameters (optional)' },
@@ -176,10 +178,13 @@ export class DecodoTools {
         inputSchema: {
           type: 'object',
           properties: {
-            start_date: { type: 'string', description: 'Start date for traffic query (ISO string, optional)' },
-            end_date: { type: 'string', description: 'End date for traffic query (ISO string, optional)' },
+            proxyType: { type: 'string', description: 'Proxy type (residential_proxies, datacenter_proxies, etc.)' },
+            startDate: { type: 'string', description: 'Start date in Y-m-d H:i:s format' },
+            endDate: { type: 'string', description: 'End date in Y-m-d H:i:s format' },
+            groupBy: { type: 'string', description: 'Group by (day, hour, etc.)' },
             sub_user_id: { type: 'string', description: 'Filter by sub-user ID (optional)' },
           },
+          required: ['proxyType', 'startDate', 'endDate', 'groupBy'],
           additionalProperties: false,
         },
       },

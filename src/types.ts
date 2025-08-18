@@ -26,8 +26,10 @@ export const WhitelistIPSchema = z.object({
 
 // Traffic schemas
 export const TrafficQuerySchema = z.object({
-  start_date: z.string().optional(),
-  end_date: z.string().optional(),
+  proxyType: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  groupBy: z.string(),
   sub_user_id: z.string().optional(),
 });
 
@@ -38,6 +40,8 @@ export const TargetInfoSchema = z.object({
 
 // Endpoint generation schemas
 export const EndpointGenerationSchema = z.object({
+  username: z.string(),
+  password: z.string(),
   protocol: z.enum(['http', 'https']).optional(),
   format: z.enum(['json', 'xml']).optional(),
   custom_params: z.record(z.string()).optional(),
