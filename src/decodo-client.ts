@@ -6,6 +6,7 @@ import type {
   SubUserUpdate, 
   WhitelistIP, 
   TrafficQuery, 
+  SubUserTrafficQuery,
   TargetInfo, 
   EndpointGeneration,
   ApiResponse 
@@ -98,7 +99,7 @@ export class DecodoClient {
     return response.data;
   }
 
-  async getSubUserTraffic(id: string, query?: TrafficQuery): Promise<ApiResponse> {
+  async getSubUserTraffic(id: string, query?: SubUserTrafficQuery): Promise<ApiResponse> {
     // Use the documented v2 API pattern: /v2/sub-users/{id}/traffic
     const response = await this.client.get(`/v2/sub-users/${id}/traffic`, { params: query });
     return response.data;

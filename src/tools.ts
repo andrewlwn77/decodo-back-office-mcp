@@ -6,6 +6,7 @@ import {
   SubUserUpdateSchema,
   WhitelistIPSchema,
   TrafficQuerySchema,
+  SubUserTrafficQuerySchema,
   TargetInfoSchema,
   EndpointGenerationSchema,
 } from './types.js';
@@ -22,14 +23,14 @@ export class DecodoTools {
         inputSchema: {
           type: 'object',
           properties: {
-            username: { type: 'string', description: 'Username for the sub-user' },
-            password: { type: 'string', description: 'Password for the sub-user' },
-            email: { type: 'string', format: 'email', description: 'Email address (optional)' },
+            username: { type: 'string', minLength: 6, maxLength: 64, pattern: '^[a-zA-Z0-9_]+$', description: 'Username for the sub-user (6-64 chars, letters/numbers/underscores only)' },
+            password: { type: 'string', minLength: 9, description: 'Password for the sub-user (9+ chars, must include uppercase letter and number, no @ or : symbols)' },
+            service_type: { type: 'string', enum: ['residential_proxies', 'shared_proxies'], description: 'Service type (defaults to residential_proxies)' },
             traffic_limit: { type: 'number', description: 'Traffic limit in bytes (optional)' },
-            expires_at: { type: 'string', description: 'Expiration date (ISO string, optional)' },
-            service_type: { type: 'string', enum: ['residential_proxies', 'shared_proxies', 'datacenter_proxies'], description: 'Service type (optional)' },
+            auto_disable: { type: 'boolean', description: 'Disables subuser when traffic limit is hit (optional)' },
+            traffic_count_from: { type: 'string', description: 'Traffic counting start date in yyyy-mm-dd hh:mm:ss format (optional)' },
           },
-          required: ['username'],
+          required: ['username', 'password'],
           additionalProperties: false,
         },
       },
@@ -63,9 +64,9 @@ export class DecodoTools {
             id: { type: 'string', description: 'Sub-user ID' },
             username: { type: 'string', description: 'New username (optional)' },
             password: { type: 'string', description: 'New password (optional)' },
-            email: { type: 'string', format: 'email', description: 'New email (optional)' },
             traffic_limit: { type: 'number', description: 'New traffic limit (optional)' },
-            expires_at: { type: 'string', description: 'New expiration date (optional)' },
+            auto_disable: { type: 'boolean', description: 'New auto_disable setting (optional)' },
+            traffic_count_from: { type: 'string', description: 'New traffic counting start date (optional)' },
           },
           required: ['id'],
           additionalProperties: false,
@@ -90,10 +91,12 @@ export class DecodoTools {
           type: 'object',
           properties: {
             id: { type: 'string', description: 'Sub-user ID' },
-            start_date: { type: 'string', description: 'Start date for traffic query (ISO string, optional)' },
-            end_date: { type: 'string', description: 'End date for traffic query (ISO string, optional)' },
+            type: { type: 'string', enum: ['24h', '7days', 'month', 'custom'], description: 'Time period type' },
+            from: { type: 'string', description: 'Start date in yyyy-mm-dd format (for custom type, optional)' },
+            to: { type: 'string', description: 'End date in yyyy-mm-dd format (for custom type, optional)' },
+            service_type: { type: 'string', enum: ['residential_proxies'], description: 'Service type (optional)' },
           },
-          required: ['id'],
+          required: ['id', 'type'],
           additionalProperties: false,
         },
       },
@@ -227,7 +230,7 @@ export class DecodoTools {
 
         case 'decodo_get_sub_user_traffic':
           const { id: subUserId, ...trafficQuery } = args;
-          const validatedQuery = TrafficQuerySchema.parse(trafficQuery);
+          const validatedQuery = SubUserTrafficQuerySchema.parse(trafficQuery);
           return await this.client.getSubUserTraffic(subUserId, validatedQuery);
 
         // Proxy Management
