@@ -1,6 +1,6 @@
 {
   "name": "decodo-back-office-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Model Context Protocol (MCP) server for Decodo proxy management API integration. Provides 14 tools for managing sub-users, proxy endpoints, IP whitelists, and traffic analytics.",
   "main": "dist/index.js",
   "bin": {
