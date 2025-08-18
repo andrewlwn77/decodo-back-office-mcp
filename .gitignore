@@ -113,4 +113,4 @@ config/secrets.js
 .mcp/
 .mcp.json
 mcp.json
-mcp-server.log
+mcp-server.log.bmad-history/
