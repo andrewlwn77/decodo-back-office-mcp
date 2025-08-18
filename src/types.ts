@@ -8,6 +8,7 @@ export const SubUserSchema = z.object({
   email: z.string().email().optional(),
   traffic_limit: z.number().optional(),
   expires_at: z.string().optional(),
+  service_type: z.enum(['residential_proxies', 'shared_proxies', 'datacenter_proxies']).optional(),
 });
 
 export const SubUserUpdateSchema = z.object({

@@ -69,7 +69,8 @@ export class DecodoClient {
 
   // Sub User Management
   async createSubUser(subUser: SubUser): Promise<ApiResponse> {
-    const response = await this.client.post('/sub-users', subUser);
+    // Use the documented v2 API pattern: /v2/sub-users
+    const response = await this.client.post('/v2/sub-users', subUser);
     return response.data;
   }
 
@@ -80,22 +81,26 @@ export class DecodoClient {
   }
 
   async getSubUser(id: string): Promise<ApiResponse> {
-    const response = await this.client.get(`/sub-users/${id}`);
+    // Use the documented v2 API pattern: /v2/sub-users/{id}
+    const response = await this.client.get(`/v2/sub-users/${id}`);
     return response.data;
   }
 
   async updateSubUser(id: string, updates: SubUserUpdate): Promise<ApiResponse> {
-    const response = await this.client.put(`/sub-users/${id}`, updates);
+    // Use the documented v2 API pattern: /v2/sub-users/{id}
+    const response = await this.client.put(`/v2/sub-users/${id}`, updates);
     return response.data;
   }
 
   async deleteSubUser(id: string): Promise<ApiResponse> {
-    const response = await this.client.delete(`/sub-users/${id}`);
+    // Use the documented v2 API pattern: /v2/sub-users/{id}
+    const response = await this.client.delete(`/v2/sub-users/${id}`);
     return response.data;
   }
 
   async getSubUserTraffic(id: string, query?: TrafficQuery): Promise<ApiResponse> {
-    const response = await this.client.get(`/sub-users/${id}/traffic`, { params: query });
+    // Use the documented v2 API pattern: /v2/sub-users/{id}/traffic
+    const response = await this.client.get(`/v2/sub-users/${id}/traffic`, { params: query });
     return response.data;
   }
 

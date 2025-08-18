@@ -27,6 +27,7 @@ export class DecodoTools {
             email: { type: 'string', format: 'email', description: 'Email address (optional)' },
             traffic_limit: { type: 'number', description: 'Traffic limit in bytes (optional)' },
             expires_at: { type: 'string', description: 'Expiration date (ISO string, optional)' },
+            service_type: { type: 'string', enum: ['residential_proxies', 'shared_proxies', 'datacenter_proxies'], description: 'Service type (optional)' },
           },
           required: ['username'],
           additionalProperties: false,
