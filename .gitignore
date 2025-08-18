@@ -114,3 +114,5 @@ config/secrets.js
 .mcp.json
 mcp.json
 mcp-server.log.bmad-history/
+
+.bmad-history/
